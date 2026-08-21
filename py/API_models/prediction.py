@@ -50,6 +50,16 @@ class PredictionReq(BaseModel):
         description="Categories in keys become value one before "
         "launching the ML algorithm. Any unknown value is ignored.",
     )
+    test_fraction: float = Field(
+        title="Test set fraction",
+        description="When set (>0), this fraction of the learning set is held out, "
+        "per category, to evaluate the classifier before it's used for real. "
+        "The deployed classifier is still trained on the full learning set; "
+        "this only affects the reported accuracy.",
+        default=0.0,
+        ge=0.0,
+        le=0.5,
+    )
 
     model_config = ConfigDict(
         json_schema_extra={
