@@ -8,12 +8,13 @@
 # Only exception to this rule is when predicted objects disappear.
 #
 from datetime import datetime
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Any, List
 
 from sqlalchemy.dialects.postgresql import (
     VARCHAR,
     INTEGER,
     TIMESTAMP,
+    JSONB,
 )
 from sqlalchemy.orm import mapped_column
 
@@ -45,6 +46,10 @@ class Training(Model):
     training_end: Mapped[datetime] = mapped_column(TIMESTAMP)
     # The settings used?
     training_path: Mapped[str] = mapped_column(VARCHAR(80))
+    # Held-out test split evaluation, when one was requested (@see PredictionReq.test_fraction).
+    # Shape: {test_fraction, overall_accuracy, macro_accuracy, train_size, test_size,
+    #         per_taxon: [...], excluded_categories: [...]}. Null when no split was evaluated.
+    evaluation: Mapped[Any | None] = mapped_column(JSONB)
 
     if TYPE_CHECKING:
         # The relationship(s) are created in Relations.py but the typing here helps IDE
