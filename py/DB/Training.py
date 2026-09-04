@@ -50,6 +50,17 @@ class Training(Model):
     # Shape: {test_fraction, overall_accuracy, macro_accuracy, train_size, test_size,
     #         per_taxon: [...], excluded_categories: [...]}. Null when no split was evaluated.
     evaluation: Mapped[Any | None] = mapped_column(JSONB)
+    # User-chosen name identifying this classifier across retrainings (Prediction jobs only;
+    # null for other training-producing flows, e.g. imports). Not unique at the DB level --
+    # several rows share a name, one per version -- uniqueness within a project is a UX-layer
+    # check, @see PredictionJob.validate_task in ecotaxa_front.
+    model_name: Mapped[str | None] = mapped_column(VARCHAR(120))
+    # The locked recipe used to produce this version, so a later retrain can replay it verbatim:
+    # {source_project_ids, categories, features, learning_limit, use_scn, pre_mapping, test_fraction}.
+    config: Mapped[Any | None] = mapped_column(JSONB)
+    # Row count of the learning set actually used at this training (independent of whether an
+    # evaluation split was done). Used to detect "more data validated since last training".
+    learning_set_size: Mapped[int | None] = mapped_column(INTEGER)
 
     if TYPE_CHECKING:
         # The relationship(s) are created in Relations.py but the typing here helps IDE
