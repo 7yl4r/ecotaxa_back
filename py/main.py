@@ -3084,7 +3084,7 @@ def predict_object_set(
 @app.get(
     "/projects/{project_id}/training_history",
     operation_id="get_training_history",
-    tags=["objects"],
+    tags=["projects"],
     response_model=List[TrainingHistoryEntry],
 )
 def get_training_history(
@@ -3109,7 +3109,7 @@ def get_training_history(
 @app.get(
     "/projects/{project_id}/models",
     operation_id="get_trained_models",
-    tags=["objects"],
+    tags=["projects"],
     response_model=List[ModelSummary],
 )
 def get_trained_models(
