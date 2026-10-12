@@ -3999,6 +3999,22 @@ UPDATE alembic_version SET version_num='ffe643791883' WHERE alembic_version.vers
 
 COMMIT;
 
+BEGIN;
+
+-- Running upgrade ffe643791883 -> cb5b2456c361
+
+ALTER TABLE training ADD COLUMN evaluation JSONB;
+
+ALTER TABLE training ADD COLUMN model_name VARCHAR(120);
+
+ALTER TABLE training ADD COLUMN config JSONB;
+
+ALTER TABLE training ADD COLUMN learning_set_size INTEGER;
+
+UPDATE alembic_version SET version_num='cb5b2456c361' WHERE alembic_version.version_num = 'ffe643791883';
+
+COMMIT;
+
 ------- Leave on tail
 
 ALTER TABLE alembic_version REPLICA IDENTITY FULL;
