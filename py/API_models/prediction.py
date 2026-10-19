@@ -18,11 +18,13 @@ class PredictionReq(BaseModel):
         title="Project Id",
         description="The destination project, of which objects will be predicted.",
     )
-    model_name: str = Field(
+    model_name: Optional[str] = Field(
         title="Model name",
         description="Identifies this classifier across retrainings. Must be unique "
         "among this project's models when training a new one; when retraining, reuse "
-        "the existing name so this becomes another version of it.",
+        "the existing name so this becomes another version of it. When omitted, the "
+        "training is not attached to any named model.",
+        default=None,
         min_length=1,
         max_length=120,
     )
